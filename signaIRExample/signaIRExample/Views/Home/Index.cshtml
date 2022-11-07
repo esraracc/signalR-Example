@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+    <h3></h3>
+
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.8/signalr.min.js"></script>
+    <script>
+        $(function () {
+            var connection = new signalR.HubConnectionBuilder().withUrl("/SignalR").build();
+            connection.start();
+            connection.on("LoadProducts", function () {
+                LoadProdData();
+            })
+
+            LoadProdData();
+
+
+            function LoadProdData() {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Index",
+                    data: JSON.stringify('{"FirstName": "Liza", "lastName": "Bon", "age": 35, "e-posta": "lizabon@example.com"}'),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: (result) => {
+                        console.log("result : ", result);
+                        $("h3").html(result);
+                    },
+                    error: (error) => {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+}
